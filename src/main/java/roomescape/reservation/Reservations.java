@@ -1,16 +1,21 @@
 package roomescape.reservation;
 
 import org.springframework.stereotype.Component;
+import roomescape.dto.ReservationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class Reservations {
     private final List<Reservation> values = new ArrayList<>();
+    private final AtomicLong ID = new AtomicLong();
 
-    public void add(Reservation reservation) {
+    public Reservation add(ReservationRequest reservationRequest) {
+        Reservation reservation = reservationRequest.toEntity(ID.incrementAndGet());
         values.add(reservation);
+        return reservation;
     }
 
     public Reservation findById(Long id) {

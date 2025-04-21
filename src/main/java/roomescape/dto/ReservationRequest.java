@@ -16,7 +16,19 @@ public class ReservationRequest {
         this.time = time;
     }
 
-    public Reservation toEntity() {
-        return new Reservation(name, date, time);
+    public Reservation toEntity(Long id) {
+        return new Reservation(id, name, date, time);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
     }
 }
