@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class Reservation {
-
     private final Long id;
     private final String name;
     private final LocalDate date;
@@ -16,10 +15,6 @@ public class Reservation {
         this.name = name;
         this.date = date;
         this.time = time;
-    }
-
-    public boolean isSameId(Long id) {
-        return this.id.equals(id);
     }
 
     public Long getId() {

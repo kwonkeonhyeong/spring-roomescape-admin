@@ -6,12 +6,13 @@ import roomescape.dto.ReservationRequest;
 import roomescape.reservation.Reservation;
 import roomescape.reservation.Reservations;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
-
     private final Reservations reservations;
 
     public ReservationController(Reservations reservations) {
@@ -26,8 +27,8 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Reservation reservation = reservations.add(reservationRequest);
-        return ResponseEntity.ok().body(reservation);
+        Long id = reservations.add(reservationRequest);
+        return ResponseEntity.ok().body(reservationRequest.toEntity(id));
     }
 
     @DeleteMapping("/{id}")

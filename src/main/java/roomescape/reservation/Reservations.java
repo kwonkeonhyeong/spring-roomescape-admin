@@ -1,36 +1,33 @@
 package roomescape.reservation;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import roomescape.dao.ReservationDao;
 import roomescape.dto.ReservationRequest;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
-@Component
+@Service
 public class Reservations {
-    private final List<Reservation> values = new ArrayList<>();
-    private final AtomicLong ID = new AtomicLong();
 
-    public Reservation add(ReservationRequest reservationRequest) {
-        Reservation reservation = reservationRequest.toEntity(ID.incrementAndGet());
-        values.add(reservation);
-        return reservation;
+    private final ReservationDao reservationDao;
+
+    public Reservations(ReservationDao reservationDao) {
+        this.reservationDao = reservationDao;
+    }
+
+    public Long add(ReservationRequest reservationRequest) {
+        return reservationDao.insert(reservationRequest);
     }
 
     public Reservation findById(Long id) {
-        return values.stream()
-                .filter(reservation -> reservation.isSameId(id))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당 예약을 찾을 수 없습니다"));
+        return reservationDao.findById(id);
     }
 
     public List<Reservation> findAll() {
-        return values;
+        return reservationDao.findAll();
     }
 
     public void deleteById(Long id) {
-        Reservation findReservation = findById(id);
-        values.remove(findReservation);
+        reservationDao.delete(id);
     }
 }
