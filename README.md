@@ -24,6 +24,13 @@
     HTTP Method : GET
     URL : /admin/reservation
     설명 : reservation 페이지 응답
+    ```
+   
+- [ ] time 페이지
+    ```markdown
+    HTTP Method : GET
+    URL : /admin/time
+    설명 : time 페이지 응답
     ``` 
 
 ## API
@@ -104,6 +111,74 @@
     - Request 예시
     ```markdown
     DELETE /reservations/1 HTTP/1.1
+    ```
+    
+    - Response 예시
+    ```markdown
+    HTTP/1.1 200 OK
+    ```
+
+- [ ] 시간 추가
+    ```markdown
+    HTTP Method : POST
+    URL : /times
+    설명 : 선택한 시간을 저장합니다.
+    ```
+    
+    - Request 예시
+    ```markdown
+    POST /times HTTP/1.1
+    content-type: application/json
+
+    {
+        "startAt": "10:00"
+    }
+    ```
+    
+    - Response 예시
+    ```markdown
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "id": 1,
+        "startAt": "10:00"
+    }
+    ```
+
+- [ ] 시간 조회
+    ```markdown
+    HTTP Method : GET
+    URL : /times
+    설명 : 등록된 시간 목록을 조회합니다.
+    ```
+    
+    - Request 예시
+    ```markdown
+    GET /times HTTP/1.1
+    ```
+    
+    - Response 예시
+    ```markdown
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "id": 1,
+        "startAt": "10:00"
+    }
+    ```
+  
+- [ ] 시간 삭제
+    ```markdown
+    HTTP Method : DELETE
+    URL : /times/{id}
+    설명 : id에 해당하는 등록된 시간을 삭제합니다. 
+    ```
+    
+    - Request 예시
+    ```markdown
+    DELETE /times/1 HTTP/1.1
     ```
     
     - Response 예시
