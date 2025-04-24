@@ -28,4 +28,10 @@ public class ReservationTimeController {
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         return ResponseEntity.ok(reservationTimes);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+        reservationTimeDao.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
