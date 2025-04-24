@@ -26,7 +26,7 @@
     설명 : reservation 페이지 응답
     ```
    
-- [ ] time 페이지
+- [x] time 페이지
     ```markdown
     HTTP Method : GET
     URL : /admin/time
@@ -118,7 +118,7 @@
     HTTP/1.1 200 OK
     ```
 
-- [ ] 시간 추가
+- [x] 시간 추가
     ```markdown
     HTTP Method : POST
     URL : /times
