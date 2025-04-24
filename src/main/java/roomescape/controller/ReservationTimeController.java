@@ -20,7 +20,7 @@ public class ReservationTimeController {
     @PostMapping
     public ResponseEntity<ReservationTime> save(@RequestBody ReservationTimeRequest reservationTimeRequest) {
         Long id = reservationTimeDao.save(reservationTimeRequest);
-        return ResponseEntity.ok().body(reservationTimeRequest.toEntity(id));
+        return ResponseEntity.ok(reservationTimeRequest.toEntity(id));
     }
 
     @GetMapping
