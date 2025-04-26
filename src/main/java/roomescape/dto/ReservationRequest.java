@@ -4,7 +4,6 @@ import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationTime;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public class ReservationRequest {
     private final String name;

@@ -29,10 +29,14 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<Reservation> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        Long id = reservationDao.insert(reservationRequest);
-        Long timeId = reservationRequest.getTimeId();
-        ReservationTime reservationTime = reservationTimeDao.findById(timeId);
-        return ResponseEntity.ok().body(reservationRequest.toEntity(id, reservationTime));
+        try{
+            Long id = reservationDao.insert(reservationRequest);
+            Long timeId = reservationRequest.getTimeId();
+            ReservationTime reservationTime = reservationTimeDao.findById(timeId);
+            return ResponseEntity.ok().body(reservationRequest.toEntity(id, reservationTime));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")
