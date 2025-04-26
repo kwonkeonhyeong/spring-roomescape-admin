@@ -10,6 +10,7 @@ import roomescape.reservation.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ReservationDao {
@@ -27,9 +28,9 @@ public class ReservationDao {
                     PreparedStatement ps = connection.prepareStatement(
                             sql,
                             new String[]{"id"});
-                    ps.setString(1, reservationRequest.getName());
-                    ps.setString(2, reservationRequest.getDate().toString());
-                    ps.setLong(3, reservationRequest.getTimeId());
+                    ps.setString(1, reservationRequest.name());
+                    ps.setString(2, reservationRequest.date().toString());
+                    ps.setLong(3, reservationRequest.timeId());
                     return ps;
                 }, keyHolder);
         return keyHolder.getKey().longValue();

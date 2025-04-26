@@ -25,7 +25,7 @@ public class ReservationTimeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
                     PreparedStatement ps = connection.prepareStatement(sql, new String[]{"id"});
-                    ps.setString(1,reservationTimeRequest.getStartAt().toString());
+                    ps.setString(1,reservationTimeRequest.startAt().toString());
                     return ps;
         }, keyHolder);
 
