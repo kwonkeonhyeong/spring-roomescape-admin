@@ -28,7 +28,7 @@ public class MissionStepTest {
     private JdbcTemplate jdbcTemplate;
 
     @Test
-    void 일단계() {
+    void 메인_화면_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin")
                 .then().log().all()
@@ -36,7 +36,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 이단계() {
+    void 예약_화면_테스트() {
         RestAssured.given().log().all()
                 .when().get("/admin/reservation")
                 .then().log().all()
@@ -50,7 +50,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 삼단계() {
+    void 예약_전체_조회_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "15:40");
 
         Map<String, String> params = new HashMap<>();
@@ -71,6 +71,24 @@ public class MissionStepTest {
                 .then().log().all()
                 .statusCode(200)
                 .body("size()", is(1));
+    }
+
+    @Test
+    void 예약_삭제_테스트() {
+        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "15:40");
+
+        Map<String, String> params = new HashMap<>();
+        params.put("name", "브라운");
+        params.put("date", LocalDate.now().plusDays(1).toString());
+        params.put("timeId", "1");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/reservations")
+                .then().log().all()
+                .statusCode(200)
+                .body("id", is(1));
 
         RestAssured.given().log().all()
                 .when().delete("/reservations/1")
@@ -85,7 +103,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 사단계() {
+    void 데이터베이스_연결_테스트() {
         try (Connection connection = jdbcTemplate.getDataSource().getConnection()) {
             assertThat(connection).isNotNull();
             assertThat(connection.getCatalog()).isEqualTo("DATABASE");
@@ -96,7 +114,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 오단계() {
+    void 예약_추가_요청에_따른_데이터베이스_저장_확인_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "10:00");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", LocalDate.now().plusDays(1), "1");
 
@@ -112,7 +130,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 육단계() {
+    void 예약_추가_및_삭제_요청에_따른_데이터베이스_확인_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "10:00");
 
         Map<String, String> params = new HashMap<>();
@@ -140,7 +158,34 @@ public class MissionStepTest {
     }
 
     @Test
-    void 칠단계() {
+    void 시간_관리_화면_테스트() {
+        RestAssured.given().log().all()
+                .when().get("/admin/time")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @Test
+    void 시간_추가_테스트() {
+        Map<String, String> params = new HashMap<>();
+        params.put("startAt", "10:00");
+
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(params)
+                .when().post("/times")
+                .then().log().all()
+                .statusCode(200);
+
+        RestAssured.given().log().all()
+                .when().get("/times")
+                .then().log().all()
+                .statusCode(200)
+                .body("size()", is(1));
+    }
+
+    @Test
+    void 시간_삭제_테스트() {
         Map<String, String> params = new HashMap<>();
         params.put("startAt", "10:00");
 
@@ -161,30 +206,11 @@ public class MissionStepTest {
                 .when().delete("/times/1")
                 .then().log().all()
                 .statusCode(200);
-    }
-
-    @Test
-    void 팔단계() {
-        jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "10:00");
-
-        Map<String, Object> reservation = new HashMap<>();
-        reservation.put("name", "브라운");
-        reservation.put("date", LocalDate.now().plusDays(1).toString());
-        reservation.put("timeId", 1);
 
         RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(reservation)
-                .when().post("/reservations")
-                .then().log().all()
-                .statusCode(200);
-
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
+                .when().get("/times")
                 .then().log().all()
                 .statusCode(200)
-                .body("size()", is(1));
+                .body("size()", is(0));
     }
-
 }
