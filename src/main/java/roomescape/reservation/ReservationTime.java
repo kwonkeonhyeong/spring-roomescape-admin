@@ -5,6 +5,8 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 public class ReservationTime {
+    private static final String VALIDATION_MESSAGE = "올바른 요청이 아닙니다";
+
     private final Long id;
     private final LocalTime startAt;
 
@@ -18,7 +20,7 @@ public class ReservationTime {
         try {
             Objects.requireNonNull(startAt);
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("올바른 요청이 아닙니다");
+            throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
 
