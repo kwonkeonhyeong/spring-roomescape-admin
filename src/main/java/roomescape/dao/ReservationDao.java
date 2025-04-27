@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,17 @@ import java.util.List;
 
 @Repository
 public class ReservationDao {
+    private static final RowMapper<Reservation> RESERVATION_ROW_MAPPER = (resultSet, rowNum) ->
+            new Reservation(
+                    resultSet.getLong("id"),
+                    resultSet.getString("name"),
+                    resultSet.getDate("date").toLocalDate(),
+                    new ReservationTime(
+                            resultSet.getLong("time_id"),
+                            resultSet.getTime("start_at").toLocalTime()
+                    )
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
@@ -22,15 +34,15 @@ public class ReservationDao {
     public Long insert(ReservationRequest reservationRequest) {
         String sql = "INSERT INTO reservation(name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update( connection -> {
-                    PreparedStatement ps = connection.prepareStatement(
-                            sql,
-                            new String[]{"id"});
-                    ps.setString(1, reservationRequest.name());
-                    ps.setString(2, reservationRequest.date().toString());
-                    ps.setLong(3, reservationRequest.timeId());
-                    return ps;
-                }, keyHolder);
+        jdbcTemplate.update(connection -> {
+            PreparedStatement ps = connection.prepareStatement(
+                    sql,
+                    new String[]{"id"});
+            ps.setString(1, reservationRequest.name());
+            ps.setString(2, reservationRequest.date().toString());
+            ps.setLong(3, reservationRequest.timeId());
+            return ps;
+        }, keyHolder);
         return keyHolder.getKey().longValue();
     }
 
@@ -48,17 +60,7 @@ public class ReservationDao {
                 """;
         return jdbcTemplate.query(
                 sql,
-                (rs, rn) -> {
-                    return new Reservation(
-                            rs.getLong("id"),
-                            rs.getString("name"),
-                            rs.getDate("date").toLocalDate(),
-                            new ReservationTime(
-                                    rs.getLong("time_id"),
-                                    rs.getTime("start_at").toLocalTime()
-                            )
-                    );
-                });
+                RESERVATION_ROW_MAPPER);
     }
 
     public int delete(Long id) {

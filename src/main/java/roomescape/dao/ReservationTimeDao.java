@@ -1,6 +1,7 @@
 package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -12,6 +13,12 @@ import java.util.List;
 
 @Repository
 public class ReservationTimeDao {
+    private static final RowMapper<ReservationTime> RESERVATION_TIME_ROW_MAPPER = (resultSet, rowNum) ->
+            new ReservationTime(
+                    resultSet.getLong("id"),
+                    resultSet.getTime("start_at").toLocalTime()
+            );
+
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationTimeDao(JdbcTemplate jdbcTemplate) {
@@ -34,23 +41,13 @@ public class ReservationTimeDao {
     public List<ReservationTime> findAll() {
         String sql = "SELECT id, start_at FROM reservation_time";
 
-        return jdbcTemplate.query(sql, (rs, rn) -> {
-            return new ReservationTime(
-                    rs.getLong("id"),
-                    rs.getTime("start_at").toLocalTime()
-            );
-        });
+        return jdbcTemplate.query(sql, RESERVATION_TIME_ROW_MAPPER);
     }
 
     public ReservationTime findById(Long id) {
         String sql = "SELECT id, start_at FROM reservation_time WHERE id = ?";
 
-        return jdbcTemplate.queryForObject(sql, (rs, rn) -> {
-            return new ReservationTime(
-                    rs.getLong("id"),
-                    rs.getTime("start_at").toLocalTime()
-            );
-        }, id);
+        return jdbcTemplate.queryForObject(sql, RESERVATION_TIME_ROW_MAPPER, id);
     }
 
     public void deleteById(Long id) {
