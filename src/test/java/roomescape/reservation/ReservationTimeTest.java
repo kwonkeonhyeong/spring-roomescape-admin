@@ -20,7 +20,6 @@ public class ReservationTimeTest {
         //given
         Long timeId = 1L;
         LocalTime time = LocalTime.of(10, 31);
-
         //when & then
         assertThatCode(() -> new ReservationTime(timeId, time)).doesNotThrowAnyException();
     }
@@ -31,7 +30,6 @@ public class ReservationTimeTest {
         //given
         Long timeId = 1L;
         LocalTime time = null;
-
         //when & then
         assertThatThrownBy(() -> new ReservationTime(timeId, time)).isInstanceOf(IllegalArgumentException.class);
     }
@@ -43,11 +41,9 @@ public class ReservationTimeTest {
         //given
         Long timeId = 1L;
         ReservationTime reservationTime = new ReservationTime(timeId, time);
-
         // then
         boolean isPast = reservationTime.isPast(date);
-
-        //when & then
+        //when
         assertThat(isPast).isTrue();
     }
 
@@ -75,11 +71,9 @@ public class ReservationTimeTest {
         //given
         Long timeId = 1L;
         ReservationTime reservationTime = new ReservationTime(timeId, time);
-
         // then
         boolean isPast = reservationTime.isPast(date);
-
-        //when & then
+        //when
         assertThat(isPast).isFalse();
     }
 
