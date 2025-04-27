@@ -43,7 +43,7 @@ public class Reservation {
         if(date.isBefore(nowDate)) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
-        if(time.isBefore(date)) {
+        if(time.isPast(date)) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }

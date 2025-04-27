@@ -22,7 +22,7 @@ public class ReservationTime {
         }
     }
 
-    public boolean isBefore(LocalDate date) {
+    public boolean isPast(LocalDate date) {
         LocalDate nowDate = LocalDate.now();
         LocalTime nowTime = LocalTime.now();
         return date.equals(nowDate) && startAt.isBefore(nowTime);
