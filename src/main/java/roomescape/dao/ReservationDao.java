@@ -10,11 +10,9 @@ import roomescape.reservation.ReservationTime;
 
 import java.sql.PreparedStatement;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class ReservationDao {
-
     private final JdbcTemplate jdbcTemplate;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {

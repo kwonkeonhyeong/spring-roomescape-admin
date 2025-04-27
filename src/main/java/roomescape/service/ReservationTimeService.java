@@ -19,7 +19,7 @@ public class ReservationTimeService {
 
     public ReservationTimeResponse save(ReservationTimeRequest reservationTimeRequest) {
         Long timeId = reservationTimeDao.save(reservationTimeRequest);
-        return new ReservationTimeResponse(timeId,reservationTimeRequest.startAt());
+        return new ReservationTimeResponse(timeId, reservationTimeRequest.startAt());
     }
 
     public ReservationTimeResponse findById(Long id) {

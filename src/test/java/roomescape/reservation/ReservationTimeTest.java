@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.*;
 
 public class ReservationTimeTest {
-    
+
     @Test
     @DisplayName("ReservationTime 생성 테스트")
     void generateReservationTime() {

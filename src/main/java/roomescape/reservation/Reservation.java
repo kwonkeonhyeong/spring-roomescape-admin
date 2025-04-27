@@ -25,7 +25,7 @@ public class Reservation {
             validateName(name);
             Objects.requireNonNull(date);
             Objects.requireNonNull(time);
-            validateReservationDateTime(date,time);
+            validateReservationDateTime(date, time);
         } catch (NullPointerException e) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
@@ -40,10 +40,10 @@ public class Reservation {
     private void validateReservationDateTime(LocalDate date, ReservationTime time) {
         LocalDateTime now = LocalDateTime.now();
         LocalDate nowDate = now.toLocalDate();
-        if(date.isBefore(nowDate)) {
+        if (date.isBefore(nowDate)) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
-        if(time.isPast(date)) {
+        if (time.isPast(date)) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }

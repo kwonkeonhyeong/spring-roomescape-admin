@@ -2,10 +2,8 @@ package roomescape.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.dto.ReservationTimeResponse;
-import roomescape.reservation.ReservationTime;
 import roomescape.service.ReservationTimeService;
 
 import java.util.List;

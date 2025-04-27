@@ -11,7 +11,6 @@ import java.util.List;
 @RequestMapping("/reservations")
 @RestController
 public class ReservationController {
-
     private final ReservationService reservationService;
 
     public ReservationController(ReservationService reservationService) {
@@ -26,7 +25,7 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponse> addReservation(@RequestBody ReservationRequest reservationRequest) {
-        try{
+        try {
             ReservationResponse reservationResponse = reservationService.insert(reservationRequest);
             return ResponseEntity.ok().body(reservationResponse);
         } catch (RuntimeException e) {
