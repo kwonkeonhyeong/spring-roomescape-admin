@@ -24,13 +24,13 @@ public class ReservationTimeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationTimeResponse>> searchReservations() {
+    public ResponseEntity<List<ReservationTimeResponse>> search() {
         List<ReservationTimeResponse> reservationTimes = reservationTimeService.findAll();
         return ResponseEntity.ok(reservationTimes);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReservationTime(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         reservationTimeService.deleteById(id);
         return ResponseEntity.ok().build();
     }
