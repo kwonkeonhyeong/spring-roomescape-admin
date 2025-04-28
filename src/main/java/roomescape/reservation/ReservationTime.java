@@ -10,15 +10,13 @@ public class ReservationTime {
     private final LocalTime startAt;
 
     public ReservationTime(Long id, LocalTime startAt) {
-        validate(startAt);
+        validateStartAt(startAt);
         this.id = id;
         this.startAt = startAt;
     }
 
-    private void validate(LocalTime startAt) {
-        try {
-            Objects.requireNonNull(startAt);
-        } catch (NullPointerException e) {
+    private void validateStartAt(LocalTime startAt) {
+        if (startAt == null) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
     }
