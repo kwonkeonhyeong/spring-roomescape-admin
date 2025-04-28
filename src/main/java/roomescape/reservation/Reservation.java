@@ -38,8 +38,7 @@ public class Reservation {
     }
 
     private void validateReservationDateTime(LocalDate date, ReservationTime time) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDate nowDate = now.toLocalDate();
+        LocalDate nowDate = LocalDate.now();
         if (date.isBefore(nowDate)) {
             throw new IllegalArgumentException(VALIDATION_MESSAGE);
         }
