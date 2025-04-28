@@ -27,7 +27,7 @@ public class ReservationRestController {
     public ResponseEntity<ReservationResponse> save(@RequestBody ReservationRequest reservationRequest) {
         try {
             ReservationResponse reservationResponse = reservationService.insert(reservationRequest);
-            return ResponseEntity.ok().body(reservationResponse);
+            return ResponseEntity.ok(reservationResponse);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
