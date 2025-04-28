@@ -76,11 +76,15 @@ public class Reservation {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Reservation that = (Reservation) o;
+        if (that.id == null || id == null) return false;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
+        if (id == null) {
+            return System.identityHashCode(this);
+        }
         return Objects.hashCode(id);
     }
 }
