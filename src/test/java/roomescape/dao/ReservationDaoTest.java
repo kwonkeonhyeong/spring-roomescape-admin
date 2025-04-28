@@ -12,6 +12,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationTimeRequest;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationTime;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,9 +29,11 @@ public class ReservationDaoTest {
     @Autowired
     private ReservationTimeDao reservationTimeDao;
 
+    private Long reservationTimeId;
+
     @BeforeEach
     void beforeEach() {
-        reservationTimeDao.save(new ReservationTimeRequest(LocalTime.of(10, 0)));
+        reservationTimeId = reservationTimeDao.save(new ReservationTime(null,LocalTime.of(10, 0)));
     }
 
     @Test
@@ -38,8 +41,9 @@ public class ReservationDaoTest {
     void saveReservation() {
         //given
         ReservationRequest reservationRequest = new ReservationRequest("hippo", LocalDate.now().plusDays(1), 1L);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationTimeId);
+        reservationDao.save(reservationRequest.toReservation(reservationTime));
         //when
-        reservationDao.save(reservationRequest);
         List<Reservation> findReservations = reservationDao.findAll();
         //then
         assertThat(findReservations.size()).isEqualTo(1);
@@ -50,8 +54,9 @@ public class ReservationDaoTest {
     @DisplayName("예약 목록 조회 기능 확인")
     void findAllReservation(List<ReservationRequest> requests) {
         //given
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationTimeId);
         for (ReservationRequest request : requests) {
-            reservationDao.save(request);
+            reservationDao.save(request.toReservation(reservationTime));
         }
         //when
         List<Reservation> findReservations = reservationDao.findAll();
@@ -71,12 +76,25 @@ public class ReservationDaoTest {
     }
 
     @Test
+    @DisplayName("예약 목록 조회 기능 확인")
+    void findReservationById() {
+        //given
+        ReservationRequest request = new ReservationRequest("hippo", LocalDate.now().plusDays(1), 1L);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationTimeId);
+        Long id = reservationDao.save(request.toReservation(reservationTime));
+        //when
+        //then
+        assertThatCode(() -> reservationDao.findById(id)).doesNotThrowAnyException();
+    }
+
+    @Test
     @DisplayName("예약 삭제 기능 확인")
     void deleteByIdReservation() {
         //given
         ReservationRequest reservationRequest = new ReservationRequest("hippo", LocalDate.now().plusDays(1), 1L);
+        ReservationTime reservationTime = reservationTimeDao.findById(reservationTimeId);
         //when
-        Long reservationId = reservationDao.save(reservationRequest);
+        Long reservationId = reservationDao.save(reservationRequest.toReservation(reservationTime));
         reservationDao.deleteById(reservationId);
         List<Reservation> findReservations = reservationDao.findAll();
         //then

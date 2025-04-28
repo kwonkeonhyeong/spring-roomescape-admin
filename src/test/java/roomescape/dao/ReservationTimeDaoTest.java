@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
-import roomescape.dto.ReservationTimeRequest;
 import roomescape.reservation.ReservationTime;
 
 import java.time.LocalTime;
@@ -27,18 +26,18 @@ public class ReservationTimeDaoTest {
     @DisplayName("예약 시간 추가 기능 확인")
     void saveReservationTime() {
         //given
-        Long timeId = reservationTimeDao.save(new ReservationTimeRequest(LocalTime.now()));
+        Long timeId = reservationTimeDao.save(new ReservationTime(null, LocalTime.now()));
         //when & then
         assertThatCode(() -> reservationTimeDao.findById(timeId)).doesNotThrowAnyException();
     }
 
     @ParameterizedTest
-    @MethodSource("generateReservationTimeRequests")
+    @MethodSource("generateReservationTime")
     @DisplayName("예약 시간 목록 조회 기능 확인")
-    void findAllReservationTime(List<ReservationTimeRequest> requests) {
+    void findAllReservationTime(List<ReservationTime> requests) {
         //given
-        for (ReservationTimeRequest request : requests) {
-            reservationTimeDao.save(request);
+        for (ReservationTime time : requests) {
+            reservationTimeDao.save(time);
         }
         //when
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
@@ -46,12 +45,12 @@ public class ReservationTimeDaoTest {
         assertThat(reservationTimes.size()).isEqualTo(2);
     }
 
-    static Stream<Arguments> generateReservationTimeRequests() {
+    static Stream<Arguments> generateReservationTime() {
         return Stream.of(
                 Arguments.arguments(
                         List.of(
-                                new ReservationTimeRequest(LocalTime.now()),
-                                new ReservationTimeRequest(LocalTime.now().plusHours(1))
+                                new ReservationTime(null, LocalTime.now()),
+                                new ReservationTime(null, LocalTime.now().plusHours(1))
                         )
                 )
         );
@@ -61,8 +60,8 @@ public class ReservationTimeDaoTest {
     @DisplayName("예약 시간 id를 이용하여 예약 시간 조회 기능 확인")
     void findReservationTimeById() {
         //given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.now());
-        Long timeId = reservationTimeDao.save(reservationTimeRequest);
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.now());
+        Long timeId = reservationTimeDao.save(reservationTime);
         //when & then
         assertThatCode(() -> reservationTimeDao.findById(timeId)).doesNotThrowAnyException();
     }
@@ -71,8 +70,8 @@ public class ReservationTimeDaoTest {
     @DisplayName("예약 시간 id를 이용하여 예약 시간 삭제 기능 확인")
     void deleteReservationTimeById() {
         //given
-        ReservationTimeRequest reservationTimeRequest = new ReservationTimeRequest(LocalTime.now());
-        Long timeId = reservationTimeDao.save(reservationTimeRequest);
+        ReservationTime reservationTime = new ReservationTime(null, LocalTime.now());
+        Long timeId = reservationTimeDao.save(reservationTime);
         reservationTimeDao.deleteById(timeId);
         List<ReservationTime> reservationTimes = reservationTimeDao.findAll();
         //when & then

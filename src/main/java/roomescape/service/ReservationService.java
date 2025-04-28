@@ -2,10 +2,12 @@ package roomescape.service;
 
 import org.springframework.stereotype.Service;
 import roomescape.dao.ReservationDao;
+import roomescape.dao.ReservationTimeDao;
 import roomescape.dto.ReservationRequest;
 import roomescape.dto.ReservationResponse;
 import roomescape.dto.ReservationTimeResponse;
 import roomescape.reservation.Reservation;
+import roomescape.reservation.ReservationTime;
 
 import java.util.List;
 
@@ -13,29 +15,30 @@ import java.util.List;
 public class ReservationService {
 
     private final ReservationDao reservationDao;
-    private final ReservationTimeService reservationTimeService;
+    private final ReservationTimeDao reservationTimeDao;
 
-    public ReservationService(ReservationDao reservationDao, ReservationTimeService reservationTimeService) {
+    public ReservationService(ReservationDao reservationDao, ReservationTimeDao reservationTimeDao) {
         this.reservationDao = reservationDao;
-        this.reservationTimeService = reservationTimeService;
+        this.reservationTimeDao = reservationTimeDao;
     }
 
     public List<ReservationResponse> findAll() {
         List<Reservation> reservations = reservationDao.findAll();
         return reservations.stream()
                 .map(reservation -> {
-                    ReservationTimeResponse reservationTimeResponse = new ReservationTimeResponse(reservation.getTime().getId(), reservation.getTime().getStartAt());
-                    return new ReservationResponse(reservation.getId(), reservation.getName(), reservation.getDate(), reservationTimeResponse);
+                    ReservationTimeResponse reservationTimeResponse = ReservationTimeResponse.from(reservation.getTime());
+                    return ReservationResponse.of(reservation, reservationTimeResponse);
                 }).toList();
     }
 
     public ReservationResponse insert(ReservationRequest request) {
-        Long reservationId = reservationDao.save(request);
         Long timeId = request.timeId();
-        ReservationTimeResponse reservationTimeResponse = reservationTimeService.findById(timeId);
-        return new ReservationResponse(
-                reservationId, request.name(), request.date(),
-                reservationTimeResponse
+        ReservationTime reservationTime = reservationTimeDao.findById(timeId);
+        Long reservationId = reservationDao.save(request.toReservation(reservationTime));
+        Reservation reservation = reservationDao.findById(reservationId);
+        return ReservationResponse.of(
+                reservation,
+                ReservationTimeResponse.from(reservationTime)
         );
     }
 
