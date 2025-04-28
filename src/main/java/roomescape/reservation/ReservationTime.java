@@ -23,10 +23,8 @@ public class ReservationTime {
         }
     }
 
-    public boolean isPast(LocalDate date) {
-        LocalDate nowDate = LocalDate.now();
-        LocalTime nowTime = LocalTime.now();
-        return date.equals(nowDate) && startAt.isBefore(nowTime);
+    public boolean isBefore(LocalTime time) {
+        return startAt.isBefore(time);
     }
 
     public Long getId() {
