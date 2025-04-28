@@ -22,32 +22,10 @@ import static org.hamcrest.Matchers.is;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class MissionStepTest {
+public class ReservationRestControllerTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
-    @Test
-    void 메인_화면_테스트() {
-        RestAssured.given().log().all()
-                .when().get("/admin")
-                .then().log().all()
-                .statusCode(200);
-    }
-
-    @Test
-    void 예약_화면_테스트() {
-        RestAssured.given().log().all()
-                .when().get("/admin/reservation")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/reservations")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
 
     @Test
     void 예약_전체_조회_테스트() {
@@ -114,7 +92,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 예약_추가_요청에_따른_데이터베이스_저장_확인_테스트() {
+    void 예약_추가_요청_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "10:00");
         jdbcTemplate.update("INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)", "브라운", LocalDate.now().plusDays(1), "1");
 
@@ -130,7 +108,7 @@ public class MissionStepTest {
     }
 
     @Test
-    void 예약_추가_및_삭제_요청에_따른_데이터베이스_확인_테스트() {
+    void 예약_추가_및_삭제_요청_테스트() {
         jdbcTemplate.update("INSERT INTO reservation_time (id, start_at) VALUES (?, ?)", "1", "10:00");
 
         Map<String, String> params = new HashMap<>();
@@ -157,60 +135,5 @@ public class MissionStepTest {
         assertThat(countAfterDelete).isEqualTo(0);
     }
 
-    @Test
-    void 시간_관리_화면_테스트() {
-        RestAssured.given().log().all()
-                .when().get("/admin/time")
-                .then().log().all()
-                .statusCode(200);
-    }
 
-    @Test
-    void 시간_추가_테스트() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-    }
-
-    @Test
-    void 시간_삭제_테스트() {
-        Map<String, String> params = new HashMap<>();
-        params.put("startAt", "10:00");
-
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(params)
-                .when().post("/times")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(1));
-
-        RestAssured.given().log().all()
-                .when().delete("/times/1")
-                .then().log().all()
-                .statusCode(200);
-
-        RestAssured.given().log().all()
-                .when().get("/times")
-                .then().log().all()
-                .statusCode(200)
-                .body("size()", is(0));
-    }
 }
