@@ -35,11 +35,11 @@ public class ReservationDaoTest {
 
     @Test
     @DisplayName("예약 추가 기능 확인")
-    void insertReservation() {
+    void saveReservation() {
         //given
         ReservationRequest reservationRequest = new ReservationRequest("hippo", LocalDate.now().plusDays(1), 1L);
         //when
-        reservationDao.insert(reservationRequest);
+        reservationDao.save(reservationRequest);
         List<Reservation> findReservations = reservationDao.findAll();
         //then
         assertThat(findReservations.size()).isEqualTo(1);
@@ -51,7 +51,7 @@ public class ReservationDaoTest {
     void findAllReservation(List<ReservationRequest> requests) {
         //given
         for (ReservationRequest request : requests) {
-            reservationDao.insert(request);
+            reservationDao.save(request);
         }
         //when
         List<Reservation> findReservations = reservationDao.findAll();
@@ -72,12 +72,12 @@ public class ReservationDaoTest {
 
     @Test
     @DisplayName("예약 삭제 기능 확인")
-    void deleteReservation() {
+    void deleteByIdReservation() {
         //given
         ReservationRequest reservationRequest = new ReservationRequest("hippo", LocalDate.now().plusDays(1), 1L);
         //when
-        Long reservationId = reservationDao.insert(reservationRequest);
-        reservationDao.delete(reservationId);
+        Long reservationId = reservationDao.save(reservationRequest);
+        reservationDao.deleteById(reservationId);
         List<Reservation> findReservations = reservationDao.findAll();
         //then
         assertThat(findReservations.size()).isEqualTo(0);

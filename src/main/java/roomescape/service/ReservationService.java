@@ -30,7 +30,7 @@ public class ReservationService {
     }
 
     public ReservationResponse insert(ReservationRequest request) {
-        Long reservationId = reservationDao.insert(request);
+        Long reservationId = reservationDao.save(request);
         Long timeId = request.timeId();
         ReservationTimeResponse reservationTimeResponse = reservationTimeService.findById(timeId);
         return new ReservationResponse(
@@ -40,6 +40,6 @@ public class ReservationService {
     }
 
     public void delete(Long id) {
-        reservationDao.delete(id);
+        reservationDao.deleteById(id);
     }
 }
