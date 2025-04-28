@@ -26,7 +26,7 @@ public class ReservationTimeDao {
     }
 
     public Long save(ReservationTimeRequest reservationTimeRequest) {
-        String sql = "INSERT INTO reservation_time( start_at ) VALUES (?)";
+        String sql = "INSERT INTO reservation_time (start_at) VALUES (?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
