@@ -2,6 +2,7 @@ package roomescape.dao;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -9,7 +10,9 @@ import roomescape.reservation.Reservation;
 import roomescape.reservation.ReservationTime;
 
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ReservationDao {
@@ -25,11 +28,25 @@ public class ReservationDao {
             );
 
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleJdbcInsert simpleJdbcInsert;
 
     public ReservationDao(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.simpleJdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
+                .withTableName("reservation")
+                .usingGeneratedKeyColumns("id");
     }
 
+
+    public Long save(Reservation reservation) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name",reservation.getName());
+        parameters.put("date",reservation.getDate());
+        parameters.put("time_id",reservation.getTime().getId());
+        Number id = simpleJdbcInsert.executeAndReturnKey(parameters);
+        return id.longValue();
+    }
+/*
     public Long save(Reservation reservation) {
         String sql = "INSERT INTO reservation (name, date, time_id) VALUES (?, ?, ?)";
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -43,7 +60,7 @@ public class ReservationDao {
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
-    }
+    }*/
 
     public List<Reservation> findAll() {
         String sql = """
